@@ -6,10 +6,11 @@ import { Link } from "expo-router";
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Hellow World!</Text>
-      <Link href="/camera" asChild>
-        <Button title="Go to Camera" />
-      </Link>
+      <View>
+        <Text>Hellow World!</Text>
+      </View>
+
+      <StatusBar style="auto" />
     </View>
   );
 }
