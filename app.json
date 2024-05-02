@@ -2,6 +2,7 @@
   "expo": {
     "name": "YardSalesApp",
     "slug": "YardSalesApp",
+    "scheme": "yardsales",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.YardSalesApp",
@@ -32,7 +35,8 @@
       "package": "com.anonymous.YardSalesApp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
     "plugins": [
       [
@@ -41,7 +45,8 @@
           "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera."
         }
       ],
-      "expo-router"
+      "expo-router",
+      "expo-font"
     ]
   }
 }
