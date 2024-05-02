@@ -1,11 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { useEffect } from "react";
@@ -32,13 +26,13 @@ export default function HomeScreen() {
     }
   }, [fontsLoaded, fontError]);
 
-  if (!fontsLoaded || !fontError) {
+  if (!fontsLoaded && !fontError) {
     return null;
   }
 
   return (
     <View style={styles.container}>
-      <Link href={"/about"} asChild>
+      <Link href={"/scanner"} asChild>
         <Pressable style={styles.box}>
           <Text style={styles.text}>Start</Text>
         </Pressable>
@@ -50,10 +44,16 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
   box: {
-    backgroundColor: "#F9EDE3",
     flex: 1,
     aspectRatio: 1,
+    backgroundColor: "#F9EDE3",
 
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#9b4521",
