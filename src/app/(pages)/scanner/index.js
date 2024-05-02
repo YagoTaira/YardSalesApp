@@ -1,10 +1,11 @@
 import { View, Text, Pressable } from "react-native";
 import React from "react";
-import { Link } from "expo-router";
+import { Link, Stack } from "expo-router";
 
-const barcodeScanner = () => {
+const BarcodeScanner = () => {
   return (
     <View>
+      <Stack.Screen options={{ title: "Barcode Scanner" }} />
       <Text>Barcode Scanner</Text>
       <Link href="/" asChild>
         <Pressable>
@@ -15,4 +16,4 @@ const barcodeScanner = () => {
   );
 };
 
-export default barcodeScanner;
+export default BarcodeScanner;
