@@ -6,7 +6,9 @@ const BarcodeScanner = () => {
   return (
     <View>
       <Stack.Screen options={{ title: "Barcode Scanner" }} />
-      <Text>Barcode Scanner</Text>
+      <Text style={{ fontFamily: "AmaticBold", fontSize: 100 }}>
+        Barcode Scanner
+      </Text>
       <Link href="/" asChild>
         <Pressable>
           <Text>Go to Home</Text>
