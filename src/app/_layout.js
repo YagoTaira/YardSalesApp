@@ -1,7 +1,14 @@
 import { Stack } from "expo-router";
 import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
+import {
+  useFonts,
+  Inter_900Black,
+  Inter_700Bold,
+  Inter_600SemiBold,
+  Inter_400Regular,
+} from "@expo-google-fonts/inter";
 import {
   AmaticSC_400Regular,
   AmaticSC_700Bold,
@@ -13,7 +20,11 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   let [fontsLoaded, fontError] = useFonts({
-    Inter: Inter_900Black,
+    Inter: Inter_400Regular,
+    InterSemi: Inter_600SemiBold,
+    InterBold: Inter_700Bold,
+    InterBlack: Inter_900Black,
+
     Amatic: AmaticSC_400Regular,
     AmaticBold: AmaticSC_700Bold,
   });
@@ -29,8 +40,10 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ title: "YardSalesApp" }} />
-    </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Stack>
+        <Stack.Screen name="index" options={{ title: "YardSalesApp" }} />
+      </Stack>
+    </GestureHandlerRootView>
   );
 }
