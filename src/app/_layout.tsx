@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import {
@@ -14,11 +14,13 @@ import {
   AmaticSC_700Bold,
 } from "@expo-google-fonts/amatic-sc";
 
-import * as SplashScreen from "expo-splash-screen";
-
-SplashScreen.preventAutoHideAsync();
+import AnimatedSplashScreen from "@/components/AnimatedSplashScreen";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 export default function RootLayout() {
+  const [appReady, setAppReady] = useState(false);
+  const [splashAnimationFinished, setsplashAnimationFinished] = useState(false);
+
   let [fontsLoaded, fontError] = useFonts({
     Inter: Inter_400Regular,
     InterSemi: Inter_600SemiBold,
@@ -31,19 +33,26 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync();
+      setAppReady(true);
     }
   }, [fontsLoaded, fontError]);
 
-  if (!fontsLoaded && !fontError) {
-    return null;
+  const showAnimatedSplash = !appReady || !splashAnimationFinished;
+  if (showAnimatedSplash) {
+    return (
+      <AnimatedSplashScreen
+        onAnimationFinish={() => setsplashAnimationFinished(true)}
+      />
+    );
   }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack>
-        <Stack.Screen name="index" options={{ title: "YardSalesApp" }} />
-      </Stack>
+      <Animated.View style={{ flex: 1 }} entering={FadeIn}>
+        <Stack screenOptions={{}}>
+          <Stack.Screen name="index" options={{ title: "YardSalesApp" }} />
+        </Stack>
+      </Animated.View>
     </GestureHandlerRootView>
   );
 }
