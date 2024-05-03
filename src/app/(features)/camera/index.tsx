@@ -14,8 +14,8 @@ const FeatureDetailsScreen = () => {
       <Stack.Screen options={{ title: "Feature: Barcode Scanner" }} />
       <MarkdownDisplay>{description}</MarkdownDisplay>
 
-      <Link href="/scanner/scanner" asChild>
-        <Button title="Go to Barcode Scanner" />
+      <Link href="/camera/camera" asChild>
+        <Button title="Go to Camera" />
       </Link>
     </SafeAreaView>
   );

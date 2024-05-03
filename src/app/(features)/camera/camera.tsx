@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet } from "react-native";
 import { Stack } from "expo-router";
 
-export default function BarcodeScanner() {
+const Camera = () => {
   return (
     <View style={styles.page}>
       <Stack.Screen options={{ headerShown: false }} />
@@ -9,7 +9,7 @@ export default function BarcodeScanner() {
       <Text>Barcode Scanner</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   page: {
@@ -18,3 +18,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+export default Camera;
