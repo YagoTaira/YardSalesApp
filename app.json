@@ -40,11 +40,22 @@
       [
         "react-native-vision-camera",
         {
-          "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera."
+          "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera.",
+
+          "enableMicrophonePermission": true,
+          "microphonePermissionText": "$(PRODUCT_NAME) needs access to your Microphone.",
+
+          "enableCodeScanner": true
         }
       ],
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+        }
+      ]
     ]
   }
 }
