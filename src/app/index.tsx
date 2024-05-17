@@ -5,7 +5,7 @@ import { Link } from "expo-router";
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Link href={"/camera"} asChild>
+      <Link href={"/authentication"} asChild>
         <Pressable style={styles.box}>
           <Text style={styles.text}>Start</Text>
         </Pressable>

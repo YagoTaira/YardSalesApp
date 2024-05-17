@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-yardsalesapp-dev-7bd92-authRole",
+      "UnauthRoleArn": "arn:aws:iam::381492212450:role/amplify-yardsalesapp-dev-7bd92-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::381492212450:role/amplify-yardsalesapp-dev-7bd92-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-yardsalesapp-dev-7bd92-deployment",
+      "UnauthRoleName": "amplify-yardsalesapp-dev-7bd92-unauthRole",
+      "StackName": "amplify-yardsalesapp-dev-7bd92",
+      "StackId": "arn:aws:cloudformation:eu-west-1:381492212450:stack/amplify-yardsalesapp-dev-7bd92/3f6b0d80-1459-11ef-9597-0a59e2915911",
+      "AmplifyAppId": "d1in57oyqwr11y"
+    }
+  }
+}
