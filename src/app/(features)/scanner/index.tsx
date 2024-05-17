@@ -11,10 +11,10 @@ Scan barcode from products using Reactive Native Vision Camera.`;
 const FeatureDetailsScreen = () => {
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
-      <Stack.Screen options={{ title: "Feature: Barcode Scanner" }} />
+      <Stack.Screen options={{ title: "Scanner" }} />
       <MarkdownDisplay>{description}</MarkdownDisplay>
 
-      <Link href="/camera/camera" asChild>
+      <Link href="/scanner/camera" asChild>
         <Button title="Go to Camera" />
       </Link>
     </SafeAreaView>
