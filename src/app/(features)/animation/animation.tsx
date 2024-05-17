@@ -1,12 +1,14 @@
 import { View, Text, Button } from "react-native";
 import React, { useRef } from "react";
 import LottieView from "lottie-react-native";
+import { Stack } from "expo-router";
 
 const AnimationScreen = () => {
   const animation = useRef<LottieView>(null);
 
   return (
     <View>
+      <Stack.Screen options={{ title: "Animation" }} />
       <LottieView
         ref={animation}
         style={{

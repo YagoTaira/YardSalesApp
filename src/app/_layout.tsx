@@ -16,14 +16,17 @@ import {
 
 import AnimatedSplashScreen from "@/components/AnimatedSplashScreen";
 import Animated, { FadeIn } from "react-native-reanimated";
+import { withAuthenticator } from "@aws-amplify/ui-react-native";
+import { getCurrentUser, AuthUser } from "aws-amplify/auth";
 
 import { Amplify } from "aws-amplify";
 import amplifyconfig from "@/amplifyconfiguration.json";
 Amplify.configure(amplifyconfig);
 
-export default function RootLayout() {
+function RootLayout() {
   const [appReady, setAppReady] = useState(false);
   const [splashAnimationFinished, setsplashAnimationFinished] = useState(false);
+  const [user, setUser] = useState<AuthUser>();
 
   let [fontsLoaded, fontError] = useFonts({
     Inter: Inter_400Regular,
@@ -35,11 +38,21 @@ export default function RootLayout() {
     AmaticBold: AmaticSC_700Bold,
   });
 
+  const fetchUser = async () => {
+    const res = await getCurrentUser();
+    setUser(res);
+  };
+
   useEffect(() => {
+    fetchUser();
     if (fontsLoaded || fontError) {
       setAppReady(true);
     }
   }, [fontsLoaded, fontError]);
+
+  console.log(user?.signInDetails);
+  console.log(user?.userId);
+  console.log(user?.username);
 
   const showAnimatedSplash = !appReady || !splashAnimationFinished;
   if (showAnimatedSplash) {
@@ -60,3 +73,5 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   );
 }
+
+export default withAuthenticator(RootLayout);

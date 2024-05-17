@@ -15,7 +15,7 @@ const AnimationScreen = () => {
         backgroundColor: "white",
       }}
     >
-      <Stack.Screen options={{ headerShown: false }} />
+      <Stack.Screen options={{ title: "Icon" }} />
       <LottieView
         //autoPlay
         ref={animation}
