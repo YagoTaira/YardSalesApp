@@ -1,3 +1,4 @@
+import React, { useCallback, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -7,7 +8,7 @@ import {
   Image,
   Button,
 } from "react-native";
-import { Stack, router, useFocusEffect } from "expo-router";
+import { Stack, useFocusEffect, router } from "expo-router";
 import {
   useCameraPermission,
   useCameraDevice,
@@ -18,7 +19,6 @@ import {
   VideoFile,
   useCodeScanner,
 } from "react-native-vision-camera";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Video } from "expo-av";
 import {
@@ -27,21 +27,37 @@ import {
   X_EBAY_C_MARKETPLACE_ID,
 } from "@env";
 
-const CameraScreen = () => {
+// Define the interface for items in the list
+interface ItemList {
+  title: string;
+  imageSource: string;
+  price: string;
+  store: string;
+}
+
+const CameraScreen: React.FC = () => {
+  // Initialize the camera device
   const device = useCameraDevice("back", {
     physicalDevices: ["wide-angle-camera"],
   });
 
-  const [isScanning, setIsScanning] = useState(true); // State to control scanning
-  const list_items = 10;
+  // State to control scanning and manage items and navigation
+  const [isScanning, setIsScanning] = useState(true);
+  const [itemList, setItemList] = useState<ItemList[]>([]);
+  const [hasNavigated, setHasNavigated] = useState(false); // Flag to prevent multiple navigations
+  const num_items = 5; // Number of items to fetch
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error message
+
+  // Set up the barcode scanner
   const codeScanner = useCodeScanner({
     codeTypes: ["ean-13"],
     onCodeScanned: async (codes) => {
-      if (isScanning) {
+      if (isScanning && !hasNavigated) {
+        setHasNavigated(true); // Prevent further navigations
         console.log(codes[0].value);
         try {
           const response = await fetch(
-            `https://api.ebay.com/buy/browse/v1/item_summary/search?q=${codes[0].value}&limit=${list_items}`,
+            `https://api.ebay.com/buy/browse/v1/item_summary/search?q=${codes[0].value}&limit=${num_items}`,
             {
               method: "GET",
               headers: {
@@ -51,21 +67,47 @@ const CameraScreen = () => {
               },
             }
           );
-          console.log(`Bearer ${EBAY_OAUTH_TOKEN}`);
           const data = await response.json();
-          console.log(data);
-          const data_title = data["itemSummaries"][0]["title"];
-          console.log(data_title);
-          router.push("/image");
-          setIsScanning(false);
+          console.log("OAuth", EBAY_OAUTH_TOKEN);
+          console.log("API response:", data); // Log the entire response
+
+          // Check if the response contains item summaries
+          if (
+            data.itemSummaries &&
+            Array.isArray(data.itemSummaries) &&
+            data.itemSummaries.length > 0
+          ) {
+            // Map the data to the card_data structure
+            const card_data = data.itemSummaries.map((item: any) => ({
+              title: item.title || "Dummy",
+              imageSource: item.image ? item.image.imageUrl : "Dummy",
+              price: item.price ? item.price.value : "dummy",
+              store: item.seller ? item.seller.username : "Dummy",
+            }));
+            console.log("Card data:", card_data);
+            setItemList(card_data);
+
+            // Navigate to item-list screen with the card_data
+            router.push({
+              pathname: "/scanner/item-list",
+              params: { items: JSON.stringify(card_data) },
+            });
+          } else {
+            // Handle the case where no search results are found
+            setErrorMessage("No search results found.");
+            console.error("No search results found.");
+          }
         } catch (error) {
-          console.error("API request failed");
-          setIsScanning(false);
+          // Handle API request failure
+          console.error("API request failed:", error);
+          setErrorMessage("Failed to fetch data from API.");
         }
+        setIsScanning(false); // Stop scanning
       }
     },
   });
 
+  // Request camera and microphone permissions
   const { hasPermission, requestPermission } = useCameraPermission();
   const {
     hasPermission: microphonePermission,
@@ -75,13 +117,17 @@ const CameraScreen = () => {
   const [flash, setFlash] = useState<TakePhotoOptions["flash"]>("off");
   const [isRecording, setIsRecording] = useState(false);
 
+  // State for storing photo and video files
   const [photo, setPhoto] = useState<PhotoFile>();
   const [video, setVideo] = useState<VideoFile>();
 
+  // Camera reference
   const camera = useRef<Camera>(null);
 
-  const [mode, setMode] = useState("camera");
+  // State to switch between camera and barcode mode
+  const [mode, setMode] = useState<"camera" | "barcode">("camera");
 
+  // Handle screen focus and permissions
   useFocusEffect(
     useCallback(() => {
       const checkPermissions = async () => {
@@ -99,12 +145,15 @@ const CameraScreen = () => {
 
       checkPermissions();
       setIsActive(true);
+      setHasNavigated(false); // Reset navigation flag when screen gains focus
+      setErrorMessage(null); // Reset error message when screen gains focus
       return () => {
         setIsActive(false);
       };
     }, [hasPermission, microphonePermission])
   );
 
+  // Handle taking a picture
   const onTakePicturePressed = async () => {
     if (isRecording) {
       camera.current?.stopRecording();
@@ -122,6 +171,7 @@ const CameraScreen = () => {
     }
   };
 
+  // Handle starting video recording
   const onStartRecording = () => {
     if (!camera.current) {
       return;
@@ -141,6 +191,7 @@ const CameraScreen = () => {
     });
   };
 
+  // Handle photo upload
   const uploadPhoto = async () => {
     if (!photo) {
       return;
@@ -149,16 +200,18 @@ const CameraScreen = () => {
     try {
       const result = await fetch(`file://${photo.path}`);
       const data = await result.blob();
-      // upload data to your network storage (ex: s3, supabase storage, etc)
+      // Upload data to your network storage (ex: s3, supabase storage, etc)
     } catch (error) {
       console.error("Failed to upload photo:", error);
     }
   };
 
+  // Render loading indicator if permissions are not granted
   if (!hasPermission || !microphonePermission) {
     return <ActivityIndicator />;
   }
 
+  // Render message if camera device is not found
   if (!device) {
     return <Text>Camera device not found!</Text>;
   }
@@ -173,6 +226,7 @@ const CameraScreen = () => {
       <Stack.Screen options={{ headerShown: false }} />
 
       {mode === "barcode" ? (
+        // Render barcode scanner
         <Camera
           device={device}
           codeScanner={codeScanner}
@@ -182,6 +236,7 @@ const CameraScreen = () => {
           }
         />
       ) : (
+        // Render camera
         <Camera
           ref={camera}
           style={StyleSheet.absoluteFill}
@@ -195,6 +250,7 @@ const CameraScreen = () => {
 
       {video && (
         <>
+          {/* Render video player */}
           <Video
             style={StyleSheet.absoluteFill}
             source={{
@@ -208,6 +264,7 @@ const CameraScreen = () => {
 
       {photo && (
         <>
+          {/* Render photo */}
           <Image source={{ uri: photo.path }} style={StyleSheet.absoluteFill} />
           <FontAwesome5
             onPress={() => setPhoto(undefined)}
@@ -233,6 +290,7 @@ const CameraScreen = () => {
 
       {!photo && !video && (
         <>
+          {/* Render camera controls */}
           <View
             style={{
               position: "absolute",
@@ -256,8 +314,15 @@ const CameraScreen = () => {
             <Ionicons
               name={mode === "camera" ? "barcode" : "camera"}
               onPress={() => {
-                setMode(mode === "barcode" ? "camera" : "barcode");
-                setIsScanning(true); // Reset scanning state when switching modes
+                setMode((prevMode) => {
+                  const newMode = prevMode === "barcode" ? "camera" : "barcode";
+                  if (newMode === "barcode") {
+                    // Reset scanning state when switching back to barcode mode
+                    setIsScanning(true);
+                    setHasNavigated(false);
+                  }
+                  return newMode;
+                });
               }}
               size={30}
               color="white"
@@ -281,8 +346,30 @@ const CameraScreen = () => {
           )}
         </>
       )}
+
+      {errorMessage && (
+        <View style={styles.errorMessageContainer}>
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        </View>
+      )}
     </View>
   );
 };
+
+// Styles for error message container and text
+const styles = StyleSheet.create({
+  errorMessageContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 20,
+    backgroundColor: "rgba(255, 0, 0, 0.5)",
+  },
+  errorMessage: {
+    color: "white",
+    textAlign: "center",
+  },
+});
 
 export default CameraScreen;
