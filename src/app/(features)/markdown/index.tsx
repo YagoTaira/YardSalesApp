@@ -22,7 +22,7 @@ Integrate Markdown content in **React Native**
 const FeatureDetailsScreen = () => {
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
-      <Stack.Screen options={{ title: "Feature: Markdown" }} />
+      <Stack.Screen options={{ title: "Markdown" }} />
       <MarkdownDisplay>{description}</MarkdownDisplay>
 
       <Link href="/markdown/editor" asChild>
