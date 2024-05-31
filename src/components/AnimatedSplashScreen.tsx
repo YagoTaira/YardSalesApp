@@ -32,7 +32,7 @@ const AnimatedSplashScreen = ({
           maxWidth: 400,
           height: 200,
         }}
-        source={require("@assets/lottie/coffee.lottie")}
+        source={require("../assets/lottie/coffee.lottie")}
       />
     </View>
   );

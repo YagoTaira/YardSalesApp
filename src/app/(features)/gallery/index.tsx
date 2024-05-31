@@ -11,11 +11,11 @@ Scan barcode from products using Reactive Native Vision Camera.`;
 const FeatureDetailsScreen = () => {
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
-      <Stack.Screen options={{ title: "Scanner" }} />
+      <Stack.Screen options={{ title: "Gallery" }} />
       <MarkdownDisplay>{description}</MarkdownDisplay>
 
-      <Link href="/scanner/camera" asChild>
-        <Button title="Go to Camera" />
+      <Link href="/gallery/photos" asChild>
+        <Button title="Go to Photos" />
       </Link>
     </SafeAreaView>
   );

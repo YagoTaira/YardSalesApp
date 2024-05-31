@@ -26,6 +26,8 @@ import {
   X_EBAY_C_ENDUSERCTX,
   X_EBAY_C_MARKETPLACE_ID,
 } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import RNFS from "react-native-fs";
 
 // Define the interface for items in the list
 interface ItemList {
@@ -36,19 +38,16 @@ interface ItemList {
 }
 
 const CameraScreen: React.FC = () => {
-  // Initialize the camera device
   const device = useCameraDevice("back", {
     physicalDevices: ["wide-angle-camera"],
   });
 
-  // State to control scanning and manage items and navigation
   const [isScanning, setIsScanning] = useState(true);
   const [itemList, setItemList] = useState<ItemList[]>([]);
   const [hasNavigated, setHasNavigated] = useState(false); // Flag to prevent multiple navigations
   const num_items = 5; // Number of items to fetch
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error message
 
-  // Set up the barcode scanner
   const codeScanner = useCodeScanner({
     codeTypes: ["ean-13"],
     onCodeScanned: async (codes) => {
@@ -71,13 +70,11 @@ const CameraScreen: React.FC = () => {
           console.log("OAuth", EBAY_OAUTH_TOKEN);
           console.log("API response:", data); // Log the entire response
 
-          // Check if the response contains item summaries
           if (
             data.itemSummaries &&
             Array.isArray(data.itemSummaries) &&
             data.itemSummaries.length > 0
           ) {
-            // Map the data to the card_data structure
             const card_data = data.itemSummaries.map((item: any) => ({
               title: item.title || "Dummy",
               imageSource: item.image ? item.image.imageUrl : "Dummy",
@@ -87,18 +84,15 @@ const CameraScreen: React.FC = () => {
             console.log("Card data:", card_data);
             setItemList(card_data);
 
-            // Navigate to item-list screen with the card_data
             router.push({
               pathname: "/scanner/item-list",
               params: { items: JSON.stringify(card_data) },
             });
           } else {
-            // Handle the case where no search results are found
             setErrorMessage("No search results found.");
             console.error("No search results found.");
           }
         } catch (error) {
-          // Handle API request failure
           console.error("API request failed:", error);
           setErrorMessage("Failed to fetch data from API.");
         }
@@ -107,7 +101,6 @@ const CameraScreen: React.FC = () => {
     },
   });
 
-  // Request camera and microphone permissions
   const { hasPermission, requestPermission } = useCameraPermission();
   const {
     hasPermission: microphonePermission,
@@ -117,17 +110,12 @@ const CameraScreen: React.FC = () => {
   const [flash, setFlash] = useState<TakePhotoOptions["flash"]>("off");
   const [isRecording, setIsRecording] = useState(false);
 
-  // State for storing photo and video files
-  const [photo, setPhoto] = useState<PhotoFile>();
-  const [video, setVideo] = useState<VideoFile>();
+  const [photo, setPhoto] = useState<PhotoFile | undefined>();
+  const [video, setVideo] = useState<VideoFile | undefined>();
 
-  // Camera reference
   const camera = useRef<Camera>(null);
-
-  // State to switch between camera and barcode mode
   const [mode, setMode] = useState<"camera" | "barcode">("camera");
 
-  // Handle screen focus and permissions
   useFocusEffect(
     useCallback(() => {
       const checkPermissions = async () => {
@@ -153,7 +141,6 @@ const CameraScreen: React.FC = () => {
     }, [hasPermission, microphonePermission])
   );
 
-  // Handle taking a picture
   const onTakePicturePressed = async () => {
     if (isRecording) {
       camera.current?.stopRecording();
@@ -164,14 +151,33 @@ const CameraScreen: React.FC = () => {
       const photo = await camera.current?.takePhoto({
         flash,
       });
-      console.log(photo);
-      setPhoto(photo);
+      if (photo) {
+        console.log(photo);
+
+        // Save photo locally
+        const filePath = `${RNFS.DocumentDirectoryPath}/${photo.path
+          .split("/")
+          .pop()}`;
+        await RNFS.moveFile(photo.path, filePath);
+
+        // Get current photos from AsyncStorage
+        const currentPhotos = JSON.parse(
+          (await AsyncStorage.getItem("photos")) || "[]"
+        );
+
+        // Add new photo path to current photos and save back to AsyncStorage
+        const updatedPhotos = [...currentPhotos, filePath];
+        await AsyncStorage.setItem("photos", JSON.stringify(updatedPhotos));
+
+        setPhoto(photo);
+      } else {
+        console.error("Failed to take photo: Photo is undefined");
+      }
     } catch (error) {
       console.error("Failed to take photo:", error);
     }
   };
 
-  // Handle starting video recording
   const onStartRecording = () => {
     if (!camera.current) {
       return;
@@ -191,27 +197,10 @@ const CameraScreen: React.FC = () => {
     });
   };
 
-  // Handle photo upload
-  const uploadPhoto = async () => {
-    if (!photo) {
-      return;
-    }
-
-    try {
-      const result = await fetch(`file://${photo.path}`);
-      const data = await result.blob();
-      // Upload data to your network storage (ex: s3, supabase storage, etc)
-    } catch (error) {
-      console.error("Failed to upload photo:", error);
-    }
-  };
-
-  // Render loading indicator if permissions are not granted
   if (!hasPermission || !microphonePermission) {
     return <ActivityIndicator />;
   }
 
-  // Render message if camera device is not found
   if (!device) {
     return <Text>Camera device not found!</Text>;
   }
@@ -226,7 +215,6 @@ const CameraScreen: React.FC = () => {
       <Stack.Screen options={{ headerShown: false }} />
 
       {mode === "barcode" ? (
-        // Render barcode scanner
         <Camera
           device={device}
           codeScanner={codeScanner}
@@ -236,7 +224,6 @@ const CameraScreen: React.FC = () => {
           }
         />
       ) : (
-        // Render camera
         <Camera
           ref={camera}
           style={StyleSheet.absoluteFill}
@@ -250,7 +237,6 @@ const CameraScreen: React.FC = () => {
 
       {video && (
         <>
-          {/* Render video player */}
           <Video
             style={StyleSheet.absoluteFill}
             source={{
@@ -264,7 +250,6 @@ const CameraScreen: React.FC = () => {
 
       {photo && (
         <>
-          {/* Render photo */}
           <Image source={{ uri: photo.path }} style={StyleSheet.absoluteFill} />
           <FontAwesome5
             onPress={() => setPhoto(undefined)}
@@ -273,24 +258,11 @@ const CameraScreen: React.FC = () => {
             color="white"
             style={{ position: "absolute", top: 50, left: 30 }}
           />
-          <View
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              paddingBottom: 50,
-              backgroundColor: "rgba(0, 0, 0, 0.40)",
-            }}
-          >
-            <Button title="upload" onPress={uploadPhoto} />
-          </View>
         </>
       )}
 
       {!photo && !video && (
         <>
-          {/* Render camera controls */}
           <View
             style={{
               position: "absolute",
@@ -344,6 +316,14 @@ const CameraScreen: React.FC = () => {
               }}
             />
           )}
+
+          <FontAwesome5
+            onPress={() => router.back()}
+            name="arrow-left"
+            size={25}
+            color="white"
+            style={{ position: "absolute", top: 50, left: 30 }}
+          />
         </>
       )}
 

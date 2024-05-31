@@ -2,7 +2,7 @@ import { View, Text, Button } from "react-native";
 import React from "react";
 import { Link, Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MarkdownDisplay from "@components/MarkdownDisplay";
+import MarkdownDisplay from "../../../components/MarkdownDisplay";
 import { useAuthenticator } from "@aws-amplify/ui-react-native";
 
 const description = `

@@ -16,7 +16,7 @@ const AnimationScreen = () => {
           height: 200,
           backgroundColor: "#eee",
         }}
-        source={require("@assets/lottie/coffee.lottie")}
+        source={require("../../../assets/lottie/coffee.lottie")}
       />
 
       <Button title="Play" onPress={() => animation.current?.play()} />

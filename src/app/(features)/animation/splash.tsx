@@ -24,7 +24,7 @@ const AnimationScreen = () => {
           maxWidth: 400,
           height: 200,
         }}
-        source={require("@assets/lottie/coffee.json")}
+        source={require("../../../assets/lottie/coffee.lottie")}
       />
     </View>
   );

@@ -7,14 +7,19 @@ import {
   FlatList,
   Button,
 } from "react-native";
-import FeatureList from "@components/core/FeatureList";
+import FeatureList from "../components/core/FeatureList";
 import { useAuthenticator } from "@aws-amplify/ui-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
 
-const features = ["animation", "authentication", "scanner", "markdown"].map(
-  (val) => val
-);
+const features = [
+  "animation",
+  "authentication",
+  "scanner",
+  "markdown",
+  "gallery",
+  "processor",
+].map((val) => val);
 console.log(features);
 
 export default function Features() {
