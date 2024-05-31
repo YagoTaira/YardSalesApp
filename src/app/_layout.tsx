@@ -14,13 +14,13 @@ import {
   AmaticSC_700Bold,
 } from "@expo-google-fonts/amatic-sc";
 
-import AnimatedSplashScreen from "@/components/AnimatedSplashScreen";
+import AnimatedSplashScreen from "../components/AnimatedSplashScreen";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { withAuthenticator } from "@aws-amplify/ui-react-native";
 import { getCurrentUser, AuthUser } from "aws-amplify/auth";
 
 import { Amplify } from "aws-amplify";
-import amplifyconfig from "@/amplifyconfiguration.json";
+import amplifyconfig from "../amplifyconfiguration.json";
 Amplify.configure(amplifyconfig);
 
 function RootLayout() {

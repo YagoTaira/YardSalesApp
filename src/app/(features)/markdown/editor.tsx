@@ -1,6 +1,6 @@
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import React, { useState } from "react";
-import MarkdownDisplay from "@components/MarkdownDisplay";
+import MarkdownDisplay from "../../../components/MarkdownDisplay";
 
 const template = `# Markdown editor
 
