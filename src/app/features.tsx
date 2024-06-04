@@ -13,9 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
 
 const features = [
-  "animation",
   "authentication",
-  "scanner",
   "markdown",
   "gallery",
   "processor",
