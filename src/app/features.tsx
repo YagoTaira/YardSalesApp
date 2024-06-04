@@ -19,8 +19,9 @@ const features = [
   "markdown",
   "gallery",
   "processor",
+  "barcode",
+  "camera",
 ].map((val) => val);
-console.log(features);
 
 export default function Features() {
   const { signOut } = useAuthenticator();
