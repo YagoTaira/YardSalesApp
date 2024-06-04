@@ -4,6 +4,7 @@ ios/
 android/
 
 .env
+reset-cache.sh
 
 # dependencies
 node_modules/
