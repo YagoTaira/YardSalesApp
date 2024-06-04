@@ -84,10 +84,10 @@ const BarcodeScreen: React.FC = () => {
             console.log("Successfully scanned!");
           } else {
             setErrorMessage("No search results found.");
-            console.error("No search results found.");
+            console.log("No search results found.");
           }
         } catch (error) {
-          console.error("API request failed:", error);
+          console.log("API request failed:", error);
           setErrorMessage("Failed to fetch data from API.");
         }
       }

@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  FlatList,
-  Dimensions,
-} from "react-native";
+import { View, Image, StyleSheet, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RNFS from "react-native-fs";
-
-const { width: windowWidth } = Dimensions.get("window");
 
 const GalleryScreen: React.FC = () => {
   const [photos, setPhotos] = useState<string[]>([]);
