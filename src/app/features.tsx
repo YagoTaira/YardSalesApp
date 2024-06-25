@@ -1,32 +1,24 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  FlatList,
-  Button,
-} from "react-native";
+import { StyleSheet, FlatList, Button } from "react-native";
 import FeatureList from "../components/core/FeatureList";
 import { useAuthenticator } from "@aws-amplify/ui-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
 
 const features = [
-  "authentication",
-  "markdown",
-  "gallery",
-  "processor",
   "barcode",
+  "recognition",
   "camera",
+  "gallery",
+  "notebook",
 ].map((val) => val);
 
 export default function Features() {
   const { signOut } = useAuthenticator();
 
   return (
-    <SafeAreaView edges={["bottom", "top"]} style={{ flex: 1 }}>
-      <Stack.Screen options={{ headerShown: false }} />
+    <SafeAreaView edges={["bottom", "top"]} style={{ flex: 1, padding: 20 }}>
+      <Stack.Screen options={{ headerShown: false, title: "Features" }} />
       <FlatList
         data={features}
         contentContainerStyle={styles.content}

@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   returnContainer: {
     position: "absolute",
     left: 20,
-    top: 50,
+    top: 70,
     padding: 10,
     borderRadius: 5,
     backgroundColor: "rgba(0, 0, 0, 0.40)",
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   flashContainer: {
     position: "absolute",
     right: 10,
-    top: 50,
+    top: 70,
     padding: 10,
     borderRadius: 5,
     backgroundColor: "rgba(0, 0, 0, 0.40)",

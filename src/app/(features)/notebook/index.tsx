@@ -1,13 +1,13 @@
-import { View, Text, Button } from "react-native";
+import { Button } from "react-native";
 import React from "react";
 import { Link, Stack } from "expo-router";
 import MarkdownDisplay from "../../../components/MarkdownDisplay";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const description = `
-# Markdown
+# Notebook
 
-Integrate Markdown content in **React Native**
+Integrate Markdown Notebook content in **React Native**
 
 📚 Today's Agenda:
 - Introduction to Markdown
@@ -22,11 +22,11 @@ Integrate Markdown content in **React Native**
 const FeatureDetailsScreen = () => {
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
-      <Stack.Screen options={{ title: "Markdown" }} />
+      <Stack.Screen options={{ title: "Description" }} />
       <MarkdownDisplay>{description}</MarkdownDisplay>
 
-      <Link href="/markdown/editor" asChild>
-        <Button title="Go to editor" />
+      <Link href="/notebook/editor" asChild>
+        <Button title="Go to Notebook" />
       </Link>
     </SafeAreaView>
   );

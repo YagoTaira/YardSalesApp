@@ -50,13 +50,14 @@ const ItemsScreen: React.FC = () => {
         keyExtractor={(item, index) => index.toString()} // Unique key for each item
         renderItem={renderItem} // Function to render each item
       />
-      <FontAwesome5
-        onPress={() => router.back()}
-        name="arrow-left"
-        size={25}
-        color="black"
-        style={{ position: "absolute", top: 50, left: 30 }}
-      />
+      <View style={styles.returnContainer}>
+        <FontAwesome5
+          onPress={() => router.back()}
+          name="arrow-left"
+          size={25}
+          color="black"
+        />
+      </View>
     </View>
   );
 };
@@ -94,6 +95,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "gray",
     marginTop: 5,
+  },
+  returnContainer: {
+    position: "absolute",
+    left: 20,
+    top: 70,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "rgba(0, 0, 0, 0.40)",
+    gap: 30,
   },
 });
 
