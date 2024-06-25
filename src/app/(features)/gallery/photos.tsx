@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Image, StyleSheet, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Stack } from "expo-router";
 
 const GalleryScreen: React.FC = () => {
   const [photos, setPhotos] = useState<string[]>([]);
@@ -27,6 +28,7 @@ const GalleryScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <Stack.Screen options={{ title: "Gallery" }} />
       <FlatList
         data={photos}
         keyExtractor={(item, index) => index.toString()}

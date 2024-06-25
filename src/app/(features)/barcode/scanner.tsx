@@ -145,13 +145,14 @@ const BarcodeScreen: React.FC = () => {
         isActive={isActive}
       />
 
-      <FontAwesome5
-        onPress={() => router.back()}
-        name="arrow-left"
-        size={25}
-        color="white"
-        style={{ position: "absolute", top: 50, left: 30 }}
-      />
+      <View style={styles.returnContainer}>
+        <FontAwesome5
+          onPress={() => router.back()}
+          name="arrow-left"
+          size={25}
+          color="white"
+        />
+      </View>
 
       {errorMessage && (
         <>
@@ -206,6 +207,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     backgroundColor: "white",
+  },
+  returnContainer: {
+    position: "absolute",
+    left: 20,
+    top: 70,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "rgba(0, 0, 0, 0.40)",
+    gap: 30,
   },
 });
 

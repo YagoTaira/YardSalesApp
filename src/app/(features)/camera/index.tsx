@@ -11,7 +11,7 @@ Take pictures and record products using Reactive Native Vision Camera for future
 const FeatureDetailsScreen = () => {
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
-      <Stack.Screen options={{ title: "Camera" }} />
+      <Stack.Screen options={{ title: "Description" }} />
       <MarkdownDisplay>{description}</MarkdownDisplay>
 
       <Link href="/camera/camera" asChild>

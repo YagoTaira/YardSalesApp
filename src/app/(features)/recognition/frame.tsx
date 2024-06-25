@@ -5,11 +5,12 @@ import {
   useCameraDevice,
   useCameraPermission,
   PhotoFile,
+  TakePhotoOptions,
 } from "react-native-vision-camera";
 import { Stack, useFocusEffect, router } from "expo-router";
 import RNFS from "react-native-fs";
 import ImageResizer from "@bam.tech/react-native-image-resizer";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 
 import {
   RekognitionClient,
@@ -28,6 +29,7 @@ const FrameProcessorScreen: React.FC = () => {
   const device = useCameraDevice("back");
 
   const [photo, setPhoto] = useState<PhotoFile | undefined>();
+  const [flash, setFlash] = useState<TakePhotoOptions["flash"]>("off");
   const [isTakingPhoto, setIsTakingPhoto] = useState(true);
   const [labels, setLabels] = useState<Label[]>([]);
   const camera = useRef<Camera>(null);
@@ -53,16 +55,10 @@ const FrameProcessorScreen: React.FC = () => {
   const takePhoto = async () => {
     setIsTakingPhoto(true);
     if (camera.current) {
-      const photo = await camera.current.takePhoto();
+      const photo = await camera.current.takePhoto({ flash });
       setPhoto(photo);
     }
     setIsTakingPhoto(false);
-  };
-
-  const goBack = async () => {
-    if (camera.current) {
-      setPhoto(undefined);
-    }
   };
 
   const processImage = async () => {
@@ -91,7 +87,7 @@ const FrameProcessorScreen: React.FC = () => {
         Image: {
           Bytes: Buffer.from(imageBase64, "base64"),
         },
-        MaxLabels: 10,
+        MaxLabels: 40,
         MinConfidence: 70,
       };
 
@@ -107,7 +103,7 @@ const FrameProcessorScreen: React.FC = () => {
         setLabels(labelDescriptions);
         console.log("Labels:", labelDescriptions);
         router.push({
-          pathname: "/processor/labels",
+          pathname: "/recognition/labels",
           params: { labels: JSON.stringify(labelDescriptions) },
         });
       }
@@ -136,13 +132,20 @@ const FrameProcessorScreen: React.FC = () => {
       {photo && (
         <>
           <Image source={{ uri: photo.path }} style={StyleSheet.absoluteFill} />
+
           <View style={styles.buttonContainer}>
             <Pressable style={styles.tab} onPress={processImage}>
               <Text style={styles.tabText}>Process Image</Text>
             </Pressable>
-            <Pressable style={[styles.tab]} onPress={() => setPhoto(undefined)}>
-              <Text style={styles.tabText}>Back</Text>
-            </Pressable>
+          </View>
+
+          <View style={styles.returnContainer}>
+            <FontAwesome5
+              onPress={() => setPhoto(undefined)}
+              name="arrow-left"
+              size={25}
+              color="white"
+            />
           </View>
         </>
       )}
@@ -161,13 +164,26 @@ const FrameProcessorScreen: React.FC = () => {
             }}
             onPress={takePhoto}
           />
-          <FontAwesome5
-            onPress={() => router.back()}
-            name="arrow-left"
-            size={25}
-            color="white"
-            style={{ position: "absolute", top: 50, left: 30 }}
-          />
+
+          <View style={styles.returnContainer}>
+            <FontAwesome5
+              onPress={() => router.back()}
+              name="arrow-left"
+              size={25}
+              color="white"
+            />
+          </View>
+
+          <View style={styles.flashContainer}>
+            <Ionicons
+              name={flash === "off" ? "flash-off" : "flash"}
+              onPress={() =>
+                setFlash((curValue) => (curValue === "off" ? "on" : "off"))
+              }
+              size={30}
+              color="white"
+            />
+          </View>
         </>
       )}
     </View>
@@ -199,6 +215,24 @@ const styles = StyleSheet.create({
   tabText: {
     fontFamily: "InterBold",
     color: "black",
+  },
+  returnContainer: {
+    position: "absolute",
+    left: 20,
+    top: 70,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "rgba(0, 0, 0, 0.40)",
+    gap: 30,
+  },
+  flashContainer: {
+    position: "absolute",
+    right: 10,
+    top: 70,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "rgba(0, 0, 0, 0.40)",
+    gap: 30,
   },
 });
 

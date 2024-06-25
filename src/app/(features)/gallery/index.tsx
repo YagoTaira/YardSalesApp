@@ -5,17 +5,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MarkdownDisplay from "../../../components/MarkdownDisplay";
 
 const description = `
-# Barcode Scanner
+# Photo Gallery
 Scan barcode from products using Reactive Native Vision Camera.`;
 
 const FeatureDetailsScreen = () => {
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
-      <Stack.Screen options={{ title: "Gallery" }} />
+      <Stack.Screen options={{ title: "Description" }} />
       <MarkdownDisplay>{description}</MarkdownDisplay>
 
       <Link href="/gallery/photos" asChild>
-        <Button title="Go to Photos" />
+        <Button title="Go to Gallery" />
       </Link>
     </SafeAreaView>
   );
