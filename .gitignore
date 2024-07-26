@@ -4,8 +4,6 @@ ios/
 android/
 
 .env
-reset-cache.sh
-FirebaseConfig.tsx
 GoogleService-Info.plist
 
 # dependencies
