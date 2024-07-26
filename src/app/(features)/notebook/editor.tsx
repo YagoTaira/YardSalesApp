@@ -1,4 +1,11 @@
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  SafeAreaView,
+} from "react-native";
 import React, { useState } from "react";
 import MarkdownDisplay from "../../../components/MarkdownDisplay";
 import { Stack } from "expo-router";
@@ -13,7 +20,7 @@ const EditorScreen = () => {
   const [tab, setTab] = useState("edit");
 
   return (
-    <View style={styles.page}>
+    <SafeAreaView style={styles.page}>
       <Stack.Screen options={{ title: "Notebook" }} />
       <View style={styles.tabsContainer}>
         <Pressable
@@ -47,7 +54,7 @@ const EditorScreen = () => {
       ) : (
         <MarkdownDisplay>{content}</MarkdownDisplay>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -70,6 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     marginVertical: 10,
+    marginHorizontal: 10,
   },
   tab: {
     flex: 1,

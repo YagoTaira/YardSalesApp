@@ -9,5 +9,6 @@ const config = getDefaultConfig(__dirname);
  * @type {import('metro-config').MetroConfig}
  */
 config.resolver.assetExts.push("lottie");
+config.resolver.assetExts.push("cjs");
 
 module.exports = config;
