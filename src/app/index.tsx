@@ -69,7 +69,8 @@ const styles = StyleSheet.create({
   welcomeText: {
     position: "absolute",
     top: 150,
-    fontSize: 18,
+    fontSize: 23,
+    fontWeight: "bold",
     marginBottom: 20,
     color: "#9b4521",
   },
