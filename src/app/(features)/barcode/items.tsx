@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   Linking,
 } from "react-native";
-import { Stack, router, useLocalSearchParams } from "expo-router";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, storage } from "../../../../FirebaseConfig";
 import { ref, uploadBytes, deleteObject } from "firebase/storage";
