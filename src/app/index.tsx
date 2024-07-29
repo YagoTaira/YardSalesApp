@@ -1,13 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Link, Stack, useRouter } from "expo-router";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged, User, signOut } from "firebase/auth";
 
 export default function HomeScreen() {
   const router = useRouter();
   const auth = getAuth();
-  const user = auth.currentUser;
+  const [user, setUser] = useState<User | null>(null);
+  const [username, setUsername] = useState<string>("");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser?.email) {
+        setUsername(
+          currentUser.email.substring(0, currentUser.email.indexOf("@"))
+        );
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -25,7 +39,8 @@ export default function HomeScreen() {
         <>
           <Link href={"/features"} asChild>
             <Pressable style={styles.box}>
-              <Text style={styles.welcomeText}>Welcome, {user.email}!</Text>
+              <Text style={styles.welcome}>Welcome,</Text>
+              <Text style={styles.username}>{username}!</Text>
               <Text style={styles.text}>Start</Text>
             </Pressable>
           </Link>
@@ -61,18 +76,28 @@ const styles = StyleSheet.create({
   },
   text: {
     position: "absolute",
-    top: 370,
+    top: 380,
     color: "#9b4521",
     fontSize: 75,
     fontFamily: "AmaticBold",
   },
-  welcomeText: {
+  welcome: {
     position: "absolute",
-    top: 150,
-    fontSize: 23,
+    top: 70,
+    fontSize: 75,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#9b4521",
+    fontFamily: "AmaticBold",
+  },
+  username: {
+    position: "absolute",
+    top: 160,
+    fontSize: 60,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#9b4521",
+    fontFamily: "AmaticBold",
   },
   signOutButton: {
     padding: 10,
@@ -81,7 +106,7 @@ const styles = StyleSheet.create({
   },
   signOutText: {
     color: "#9b4521",
-    fontSize: 50,
+    fontSize: 55,
     fontFamily: "AmaticBold",
   },
 });
