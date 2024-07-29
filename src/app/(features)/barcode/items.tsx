@@ -12,6 +12,8 @@ import {
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { auth, storage } from "../../../../FirebaseConfig";
+import { ref, uploadBytes, deleteObject } from "firebase/storage";
 
 // Define the interface for items in the list
 interface ItemList {
@@ -43,17 +45,41 @@ const ItemsScreen: React.FC = () => {
     }
   };
 
-  const toggleWishlist = (itemId: string) => {
+  const toggleWishlist = async (item: ItemList) => {
+    const user = auth.currentUser;
+    if (!user) {
+      console.error("No user logged in");
+      return;
+    }
+
     setWishlist((prevWishlist) => {
       const newWishlist = new Set(prevWishlist);
-      if (newWishlist.has(itemId)) {
-        newWishlist.delete(itemId);
+      if (newWishlist.has(item.id)) {
+        newWishlist.delete(item.id);
+        // Remove from Firebase Storage
+        const itemRef = ref(
+          storage,
+          `users/${user.uid}/wishlist/${item.id}.json`
+        );
+        deleteObject(itemRef).catch((error) => {
+          console.error("Error removing item from wishlist:", error);
+        });
       } else {
-        newWishlist.add(itemId);
+        newWishlist.add(item.id);
+        // Save to Firebase Storage
+        const itemRef = ref(
+          storage,
+          `users/${user.uid}/wishlist/${item.id}.json`
+        );
+        const itemBlob = new Blob([JSON.stringify(item)], {
+          type: "application/json",
+        });
+        uploadBytes(itemRef, itemBlob).catch((error) => {
+          console.error("Error saving item to wishlist:", error);
+        });
       }
       return newWishlist;
     });
-    // Here you would typically save the updated wishlist to your storage or backend
   };
 
   // Function to render each item in the list
@@ -68,7 +94,7 @@ const ItemsScreen: React.FC = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.wishlistIcon}
-        onPress={() => toggleWishlist(item.id)}
+        onPress={() => toggleWishlist(item)}
       >
         <Ionicons
           name={wishlist.has(item.id) ? "heart" : "heart-outline"}
@@ -84,20 +110,20 @@ const ItemsScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen options={{ headerShown: false }} />
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+        >
+          <Ionicons name="arrow-back" size={24} color="black" />
+          <Text style={styles.headerTitle}>Barcode Scanner</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={itemList}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
       />
-      <View style={styles.returnContainer}>
-        <FontAwesome5
-          onPress={() => router.back()}
-          name="arrow-left"
-          size={25}
-          color="black"
-        />
-      </View>
     </SafeAreaView>
   );
 };
@@ -136,15 +162,6 @@ const styles = StyleSheet.create({
     color: "gray",
     marginTop: 5,
   },
-  returnContainer: {
-    position: "absolute",
-    left: 20,
-    top: 70,
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: "rgba(0, 0, 0, 0.40)",
-    gap: 30,
-  },
   wishlistIcon: {
     position: "absolute",
     top: 10,
@@ -152,6 +169,20 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.7)",
     borderRadius: 15,
     padding: 5,
+  },
+  header: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 10,
   },
 });
 
