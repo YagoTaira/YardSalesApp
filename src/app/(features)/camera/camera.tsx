@@ -19,8 +19,8 @@ import {
 } from "react-native-vision-camera";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Video } from "expo-av";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import RNFS from "react-native-fs";
+import { auth, storage } from "../../../../FirebaseConfig";
+import { ref, uploadBytes } from "firebase/storage";
 
 const CameraScreen: React.FC = () => {
   const device = useCameraDevice("back", {
@@ -77,27 +77,40 @@ const CameraScreen: React.FC = () => {
       if (photo) {
         console.log("Photo sucessfully taken!");
 
-        // Save photo locally
-        const filePath = `${RNFS.DocumentDirectoryPath}/${photo.path
-          .split("/")
-          .pop()}`;
-        await RNFS.moveFile(photo.path, filePath);
+        // Get the current user
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("No user logged in");
+          return;
+        }
 
-        // Get current photos from AsyncStorage
-        const currentPhotos = JSON.parse(
-          (await AsyncStorage.getItem("photos")) || "[]"
+        // Convert photo to blob
+        const response = await fetch(photo.path);
+        const blob = await response.blob();
+
+        // Upload photo to Firebase Storage
+        const photoName = `${Date.now()}.jpg`;
+        const storageRef = ref(
+          storage,
+          `users/${user.uid}/photos/${photoName}`
         );
+        await uploadBytes(storageRef, blob);
 
-        // Add new photo path to current photos and save back to AsyncStorage
-        const updatedPhotos = [...currentPhotos, filePath];
-        await AsyncStorage.setItem("photos", JSON.stringify(updatedPhotos));
+        console.log("Photo uploaded to Firebase");
 
         setPhoto(photo);
       } else {
         console.error("Failed to take photo: Photo is undefined");
       }
     } catch (error) {
-      console.error("Failed to take photo:", error);
+      console.error("Failed to take photo or upload to Firebase:", error);
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
+      }
+      if (error && typeof error === "object" && "code" in error) {
+        console.error("Error code:", (error as any).code);
+      }
     }
   };
 
