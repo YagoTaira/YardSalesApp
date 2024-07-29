@@ -6,13 +6,13 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
-  SafeAreaView,
   Text,
 } from "react-native";
 import { router } from "expo-router";
 import { ref, listAll, getDownloadURL, deleteObject } from "firebase/storage";
 import { auth, storage } from "../../../../FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Photo {
   id: string;
@@ -96,7 +96,7 @@ const GalleryScreen: React.FC = () => {
           style={styles.backButton}
         >
           <Ionicons name="arrow-back" size={24} color="black" />
-          <Text style={styles.headerTitle}>Gallery</Text>
+          <Text style={styles.headerTitle}>Description</Text>
         </TouchableOpacity>
       </View>
       <FlatList

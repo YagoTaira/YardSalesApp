@@ -4,11 +4,13 @@ import {
   TextInput,
   StyleSheet,
   Pressable,
-  SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import MarkdownDisplay from "../../../components/MarkdownDisplay";
-import { Stack } from "expo-router";
+import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const template = `# Notebook editor
 
@@ -21,7 +23,15 @@ const EditorScreen = () => {
 
   return (
     <SafeAreaView style={styles.page}>
-      <Stack.Screen options={{ title: "Notebook" }} />
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+        >
+          <Ionicons name="arrow-back" size={24} color="black" />
+          <Text style={styles.headerTitle}>Description</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.tabsContainer}>
         <Pressable
           onPress={() => setTab("edit")}
@@ -60,9 +70,22 @@ const EditorScreen = () => {
 
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: "whitesmoke",
     flex: 1,
     padding: 10,
+  },
+  header: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  backButton: {
+    marginLeft: 10,
+    flexDirection: "row",
+    alignItems: "center",
   },
   input: {
     backgroundColor: "white",
