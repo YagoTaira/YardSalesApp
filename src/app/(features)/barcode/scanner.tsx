@@ -4,7 +4,6 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
-  Button,
   Pressable,
 } from "react-native";
 import { Stack, useFocusEffect, router, Link } from "expo-router";
@@ -58,10 +57,8 @@ const BarcodeScreen: React.FC = () => {
             }
           );
           const data = await response.json();
-          console.log(
-            "OAuth ending in...",
-            EBAY_OAUTH_TOKEN.substring(EBAY_OAUTH_TOKEN.length - 20)
-          );
+
+          console.log(data);
 
           if (
             data.itemSummaries &&
@@ -69,10 +66,12 @@ const BarcodeScreen: React.FC = () => {
             data.itemSummaries.length > 0
           ) {
             const card_data = data.itemSummaries.map((item: any) => ({
+              id: item.itemId || "Dummy",
               title: item.title || "Dummy",
               imageSource: item.image ? item.image.imageUrl : "Dummy",
               price: item.price ? item.price.value : "dummy",
-              store: item.seller ? item.seller.username : "Dummy",
+              seller: item.seller ? item.seller.username : "Dummy",
+              url: item.itemWebUrl || "Dummy",
             }));
             setItemList(card_data);
 
