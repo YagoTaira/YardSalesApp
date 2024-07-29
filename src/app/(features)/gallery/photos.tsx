@@ -6,13 +6,13 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
-  SafeAreaView,
   Text,
 } from "react-native";
-import { Stack, useRouter } from "expo-router";
+import { router } from "expo-router";
 import { ref, listAll, getDownloadURL, deleteObject } from "firebase/storage";
 import { auth, storage } from "../../../../FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Photo {
   id: string;
@@ -22,7 +22,6 @@ interface Photo {
 const GalleryScreen: React.FC = () => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     loadPhotos();
@@ -97,8 +96,8 @@ const GalleryScreen: React.FC = () => {
           style={styles.backButton}
         >
           <Ionicons name="arrow-back" size={24} color="black" />
+          <Text style={styles.headerTitle}>Description</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Gallery</Text>
       </View>
       <FlatList
         data={photos}
@@ -115,8 +114,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
@@ -153,6 +150,8 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   backButton: {
+    flexDirection: "row",
+    alignItems: "center",
     marginLeft: 10,
   },
 });

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { StyleSheet, View, Text, Button, Pressable, Image } from "react-native";
+import React, { useState, useCallback, useRef } from "react";
+import { StyleSheet, View, Text, Pressable, Image } from "react-native";
 import {
   Camera,
   useCameraDevice,

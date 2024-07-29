@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#F9EDE3",
+    backgroundColor: "#fff",
   },
   content: {
     gap: 10,
@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#9b4521",
     borderRadius: 20,
+    backgroundColor: "#F9EDE3",
   },
   signOutText: {
     color: "#9b4521",
