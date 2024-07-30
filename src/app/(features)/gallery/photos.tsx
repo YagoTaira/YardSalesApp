@@ -99,11 +99,17 @@ const GalleryScreen: React.FC = () => {
           <Text style={styles.headerTitle}>Description</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={photos}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-      />
+      {photos.length > 0 ? (
+        <FlatList
+          data={photos}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Text>Your gallery is empty.</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -153,6 +159,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginLeft: 10,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

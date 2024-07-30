@@ -11,6 +11,7 @@ import { Stack, useFocusEffect, router } from "expo-router";
 import RNFS from "react-native-fs";
 import ImageResizer from "@bam.tech/react-native-image-resizer";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import "react-native-get-random-values";
 
 import {
   RekognitionClient,
