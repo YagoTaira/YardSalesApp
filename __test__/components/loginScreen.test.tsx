@@ -5,25 +5,6 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Alert } from "react-native";
 import { router } from "expo-router";
 
-jest.mock("firebase/auth", () => ({
-  getAuth: jest.fn(() => ({})),
-  signInWithEmailAndPassword: jest.fn(),
-}));
-
-jest.mock("expo-router", () => ({
-  router: {
-    replace: jest.fn(),
-  },
-}));
-
-jest.mock("react-native/Libraries/Alert/Alert", () => ({
-  alert: jest.fn((title, message, buttons) => {
-    if (buttons && buttons.length > 0 && buttons[0].onPress) {
-      buttons[0].onPress();
-    }
-  }),
-}));
-
 describe("LoginScreen", () => {
   beforeEach(() => {
     jest.clearAllMocks();

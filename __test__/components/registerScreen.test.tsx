@@ -5,26 +5,6 @@ import { Alert } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
 
-jest.mock("../../FirebaseConfig", () => ({
-  auth: {
-    createUserWithEmailAndPassword: jest.fn(),
-  },
-}));
-
-jest.mock("expo-router", () => ({
-  router: {
-    replace: jest.fn(),
-  },
-}));
-
-jest.mock("react-native/Libraries/Alert/Alert", () => ({
-  alert: jest.fn((title, message, buttons) => {
-    if (buttons && buttons.length > 0 && buttons[0].onPress) {
-      buttons[0].onPress();
-    }
-  }),
-}));
-
 describe("RegisterScreen", () => {
   beforeEach(() => {
     jest.clearAllMocks();
