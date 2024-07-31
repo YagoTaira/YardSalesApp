@@ -11,13 +11,12 @@ import {
 } from "react-native";
 import { createUserWithEmailAndPassword, AuthError } from "firebase/auth";
 import { auth } from "../../FirebaseConfig";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 
 const RegisterScreen: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
 
   const validateInputs = (): boolean => {
     if (!email || !password) {
