@@ -17,6 +17,8 @@ jest.mock("expo-router", () => ({
   },
   router: {
     replace: jest.fn(),
+    back: jest.fn(),
+    push: jest.fn(),
   },
 }));
 
@@ -32,4 +34,9 @@ jest.mock("react-native/Libraries/Alert/Alert", () => ({
       buttons[0].onPress();
     }
   }),
+}));
+
+jest.mock("@expo/vector-icons", () => ({
+  Ionicons: "Ionicons",
+  FontAwesome5: "FontAwesome5",
 }));
