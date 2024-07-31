@@ -6,9 +6,15 @@ jest.mock("firebase/auth", () => ({
   getAuth: jest.fn(() => ({})),
   signInWithEmailAndPassword: jest.fn(),
   createUserWithEmailAndPassword: jest.fn(),
+  onAuthStateChanged: jest.fn(),
+  signOut: jest.fn(),
 }));
 
 jest.mock("expo-router", () => ({
+  Link: "Link",
+  Stack: {
+    Screen: "Screen",
+  },
   router: {
     replace: jest.fn(),
   },
