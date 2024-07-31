@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, FlatList, Button, Pressable, Text } from "react-native";
+import { StyleSheet, FlatList, Pressable, Text } from "react-native";
 import FeatureList from "../components/core/FeatureList";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, useRouter } from "expo-router";
+import { Stack, router } from "expo-router";
 import { getAuth, signOut } from "firebase/auth";
 
 const features = [
@@ -15,7 +15,6 @@ const features = [
 ].map((val) => val);
 
 export default function Features() {
-  const router = useRouter();
   const auth = getAuth();
   const user = auth.currentUser;
 
