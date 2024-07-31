@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { Link, Stack, useRouter } from "expo-router";
+import { Link, Stack, router } from "expo-router";
 import { getAuth, onAuthStateChanged, User, signOut } from "firebase/auth";
 
 export default function HomeScreen() {
-  const router = useRouter();
   const auth = getAuth();
   const [user, setUser] = useState<User | null>(null);
   const [username, setUsername] = useState<string>("");

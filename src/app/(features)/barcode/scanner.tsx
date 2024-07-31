@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -95,32 +95,35 @@ const BarcodeScreen: React.FC = () => {
 
   const { hasPermission, requestPermission } = useCameraPermission();
 
+  useEffect(() => {
+    const checkPermissions = async () => {
+      try {
+        if (!hasPermission) {
+          await requestPermission();
+        }
+      } catch (error) {
+        console.error("Failed to get permissions:", error);
+      }
+    };
+
+    checkPermissions();
+  }, [hasPermission, requestPermission]);
+
   const [isActive, setIsActive] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
-      const checkPermissions = async () => {
-        try {
-          if (!hasPermission) {
-            await requestPermission();
-          }
-        } catch (error) {
-          console.error("Failed to get permissions:", error);
-        }
-      };
-
-      checkPermissions();
       setIsActive(true);
-      setHasNavigated(false); // Reset navigation flag when screen gains focus
-      setErrorMessage(null); // Reset error message when screen gains focus
+      setHasNavigated(false);
+      setErrorMessage(null);
       return () => {
         setIsActive(false);
       };
-    }, [hasPermission])
+    }, [])
   );
 
   if (!hasPermission) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator testID="activity-indicator" />;
   }
 
   if (!device) {
@@ -138,6 +141,7 @@ const BarcodeScreen: React.FC = () => {
       <Stack.Screen options={{ headerShown: false }} />
 
       <Camera
+        testID="camera"
         device={device}
         codeScanner={codeScanner}
         style={StyleSheet.absoluteFill}
@@ -146,6 +150,7 @@ const BarcodeScreen: React.FC = () => {
 
       <View style={styles.returnContainer}>
         <FontAwesome5
+          testID="back-button"
           onPress={() => router.back()}
           name="arrow-left"
           size={25}
@@ -160,7 +165,11 @@ const BarcodeScreen: React.FC = () => {
               <Text style={styles.errorMessage}>{errorMessage}</Text>
             </View>
             <View style={styles.buttonContainer}>
-              <Pressable style={styles.button} onPress={() => reScan()}>
+              <Pressable
+                testID="rescan-button"
+                style={styles.button}
+                onPress={() => reScan()}
+              >
                 <Text>Try again</Text>
               </Pressable>
             </View>

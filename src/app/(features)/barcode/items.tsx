@@ -97,6 +97,7 @@ const ItemsScreen: React.FC = () => {
         onPress={() => toggleWishlist(item)}
       >
         <Ionicons
+          testID="wishlist-button-1"
           name={wishlist.has(item.id) ? "heart" : "heart-outline"}
           size={45}
           color={wishlist.has(item.id) ? "red" : "black"}
@@ -112,6 +113,7 @@ const ItemsScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity
+          testID="back-button"
           onPress={() => router.back()}
           style={styles.backButton}
         >
