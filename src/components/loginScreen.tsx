@@ -27,8 +27,8 @@ const LoginScreen: React.FC = () => {
           },
         },
       ]);
-    } catch (error) {
-      Alert.alert("Error", (error as Error).message);
+    } catch (error: any) {
+      Alert.alert("Error", "Incorrect login credentials.");
     }
   };
 
