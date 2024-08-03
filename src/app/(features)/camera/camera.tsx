@@ -153,6 +153,7 @@ const CameraScreen: React.FC = () => {
         photo
         video
         audio
+        testID="camera"
       />
 
       {video && (
@@ -200,6 +201,7 @@ const CameraScreen: React.FC = () => {
               }
               size={30}
               color="white"
+              testID="flash-button"
             />
           </View>
 
@@ -209,6 +211,7 @@ const CameraScreen: React.FC = () => {
               name="arrow-left"
               size={25}
               color="white"
+              testID="back-button"
             />
           </View>
 
@@ -219,6 +222,7 @@ const CameraScreen: React.FC = () => {
               styles.cameraButton,
               { backgroundColor: isRecording ? "red" : "white" },
             ]}
+            testID="camera-button"
           />
         </>
       )}

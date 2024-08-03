@@ -112,11 +112,13 @@ const WishlistScreen: React.FC = () => {
           source={{ uri: item.imageSource }}
           style={styles.image}
           resizeMode="contain"
+          testID="item-image"
         />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.removeButton}
         onPress={() => handleRemoveItem(item)}
+        testID="remove-button"
       >
         <Ionicons name="trash-outline" size={24} color="white" />
       </TouchableOpacity>
@@ -129,7 +131,11 @@ const WishlistScreen: React.FC = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator
+          size="large"
+          color="#0000ff"
+          testID="loading-indicator"
+        />
       </View>
     );
   }
@@ -140,6 +146,7 @@ const WishlistScreen: React.FC = () => {
         <TouchableOpacity
           onPress={() => router.back()}
           style={styles.backButton}
+          testID="back-button"
         >
           <Ionicons name="arrow-back" size={24} color="black" />
           <Text style={styles.headerTitle}>Wishlist</Text>
