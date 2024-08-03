@@ -135,7 +135,11 @@ const FrameProcessorScreen: React.FC = () => {
           <Image source={{ uri: photo.path }} style={StyleSheet.absoluteFill} />
 
           <View style={styles.buttonContainer}>
-            <Pressable style={styles.tab} onPress={processImage}>
+            <Pressable
+              testID="process-image-button"
+              style={styles.tab}
+              onPress={processImage}
+            >
               <Text style={styles.tabText}>Process Image</Text>
             </Pressable>
           </View>
@@ -154,6 +158,7 @@ const FrameProcessorScreen: React.FC = () => {
       {!photo && (
         <>
           <Pressable
+            testID="camera-button"
             style={{
               position: "absolute",
               alignSelf: "center",
@@ -168,6 +173,7 @@ const FrameProcessorScreen: React.FC = () => {
 
           <View style={styles.returnContainer}>
             <FontAwesome5
+              testID="back-button"
               onPress={() => router.back()}
               name="arrow-left"
               size={25}
@@ -177,6 +183,7 @@ const FrameProcessorScreen: React.FC = () => {
 
           <View style={styles.flashContainer}>
             <Ionicons
+              testID="flash-icon"
               name={flash === "off" ? "flash-off" : "flash"}
               onPress={() =>
                 setFlash((curValue) => (curValue === "off" ? "on" : "off"))

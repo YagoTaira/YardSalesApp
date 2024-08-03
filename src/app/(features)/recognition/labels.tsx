@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text, FlatList } from "react-native";
-import { useRouter, useLocalSearchParams, Stack } from "expo-router";
+import { router, useLocalSearchParams, Stack } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -10,7 +10,6 @@ interface Label {
 }
 
 const LabelResultsScreen: React.FC = () => {
-  const router = useRouter();
   const { labels } = useLocalSearchParams();
   const labelList: Label[] = JSON.parse(labels as string);
 
@@ -29,6 +28,7 @@ const LabelResultsScreen: React.FC = () => {
       />
       <View style={styles.returnContainer}>
         <FontAwesome5
+          testID="back-button"
           onPress={() => router.back()}
           name="arrow-left"
           size={25}
