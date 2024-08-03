@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Image,
@@ -23,22 +23,22 @@ const GalleryScreen: React.FC = () => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadPhotos();
-  }, []);
-
-  const loadPhotos = async () => {
+  const loadPhotos = useCallback(async () => {
     const user = auth.currentUser;
     if (user) {
       const listRef = ref(storage, `users/${user.uid}/photos`);
       try {
         const res = await listAll(listRef);
-        const photoPromises = res.items.map(async (itemRef) => {
-          const url = await getDownloadURL(itemRef);
-          return { id: itemRef.name, url };
-        });
-        const photosList = await Promise.all(photoPromises);
-        setPhotos(photosList);
+        if (res.items && res.items.length > 0) {
+          const photoPromises = res.items.map(async (itemRef) => {
+            const url = await getDownloadURL(itemRef);
+            return { id: itemRef.name, url };
+          });
+          const photosList = await Promise.all(photoPromises);
+          setPhotos(photosList);
+        } else {
+          setPhotos([]);
+        }
       } catch (error) {
         console.error("Error fetching photos:", error);
       } finally {
@@ -48,7 +48,11 @@ const GalleryScreen: React.FC = () => {
       console.error("No user logged in");
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadPhotos();
+  }, [loadPhotos]);
 
   const handleDeletePhoto = async (photoId: string) => {
     const user = auth.currentUser;
@@ -65,7 +69,7 @@ const GalleryScreen: React.FC = () => {
   };
 
   const renderItem = ({ item }: { item: Photo }) => (
-    <View style={styles.itemContainer}>
+    <View testID="photo-item" style={styles.itemContainer}>
       <Image
         source={{ uri: item.url }}
         style={styles.image}
@@ -75,7 +79,12 @@ const GalleryScreen: React.FC = () => {
         style={styles.deleteButton}
         onPress={() => handleDeletePhoto(item.id)}
       >
-        <Ionicons name="trash-outline" size={24} color="white" />
+        <Ionicons
+          testID="delete-button"
+          name="trash-outline"
+          size={24}
+          color="white"
+        />
       </TouchableOpacity>
     </View>
   );
@@ -83,7 +92,11 @@ const GalleryScreen: React.FC = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator
+          testID="loading-indicator"
+          size="large"
+          color="#0000ff"
+        />
       </View>
     );
   }
@@ -96,7 +109,9 @@ const GalleryScreen: React.FC = () => {
           style={styles.backButton}
         >
           <Ionicons name="arrow-back" size={24} color="black" />
-          <Text style={styles.headerTitle}>Description</Text>
+          <Text testID="back-button" style={styles.headerTitle}>
+            Description
+          </Text>
         </TouchableOpacity>
       </View>
       {photos.length > 0 ? (
@@ -106,7 +121,7 @@ const GalleryScreen: React.FC = () => {
           renderItem={renderItem}
         />
       ) : (
-        <View style={styles.emptyContainer}>
+        <View testID="empty-container" style={styles.emptyContainer}>
           <Text>Your gallery is empty.</Text>
         </View>
       )}

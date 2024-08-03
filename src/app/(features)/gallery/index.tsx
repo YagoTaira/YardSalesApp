@@ -14,6 +14,7 @@ const FeatureDetailsScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity
+          testID="back-button"
           onPress={() => router.back()}
           style={styles.backButton}
         >
