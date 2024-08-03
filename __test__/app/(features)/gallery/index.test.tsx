@@ -34,7 +34,7 @@ describe("FeatureDetailsScreen", () => {
     expect(router.back).toHaveBeenCalled();
   });
 
-  it("renders Link component with correct href and button", () => {
+  it("renders href button component", () => {
     const { getByText } = render(<FeatureDetailsScreen />);
 
     const galleryButton = getByText("Go to Gallery");
