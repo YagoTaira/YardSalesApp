@@ -61,7 +61,6 @@ const GalleryScreen: React.FC = () => {
       try {
         await deleteObject(photoRef);
         setPhotos(photos.filter((photo) => photo.id !== photoId));
-        console.log("Photo deleted successfully");
       } catch (error) {
         console.error("Error deleting photo:", error);
       }

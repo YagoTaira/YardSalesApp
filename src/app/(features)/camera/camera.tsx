@@ -75,8 +75,6 @@ const CameraScreen: React.FC = () => {
         flash,
       });
       if (photo) {
-        console.log("Photo sucessfully taken!");
-
         // Get the current user
         const user = auth.currentUser;
         if (!user) {
@@ -95,8 +93,6 @@ const CameraScreen: React.FC = () => {
           `users/${user.uid}/photos/${photoName}`
         );
         await uploadBytes(storageRef, blob);
-
-        console.log("Photo uploaded to Firebase");
 
         setPhoto(photo);
       } else {
@@ -122,7 +118,6 @@ const CameraScreen: React.FC = () => {
     camera.current.startRecording({
       flash: flash === "on" ? "on" : "off",
       onRecordingFinished: (video) => {
-        console.log(video);
         setIsRecording(false);
         setVideo(video);
       },

@@ -102,7 +102,6 @@ const FrameProcessorScreen: React.FC = () => {
           confidence: label.Confidence || 0,
         }));
         setLabels(labelDescriptions);
-        console.log("Labels:", labelDescriptions);
         router.push({
           pathname: "/recognition/labels",
           params: { labels: JSON.stringify(labelDescriptions) },

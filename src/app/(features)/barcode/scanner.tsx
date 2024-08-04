@@ -58,8 +58,6 @@ const BarcodeScreen: React.FC = () => {
           );
           const data = await response.json();
 
-          console.log(data);
-
           if (
             data.itemSummaries &&
             Array.isArray(data.itemSummaries) &&
@@ -79,14 +77,10 @@ const BarcodeScreen: React.FC = () => {
               pathname: "/barcode/items",
               params: { items: JSON.stringify(card_data) },
             });
-
-            console.log("Successfully scanned!");
           } else {
             setErrorMessage("No search results found.");
-            console.log("No search results found.");
           }
         } catch (error) {
-          console.log("API request failed:", error);
           setErrorMessage("Failed to fetch data from API.");
         }
       }
