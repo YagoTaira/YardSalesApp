@@ -161,6 +161,22 @@ const CameraScreen: React.FC = () => {
             useNativeControls
             isLooping
           />
+          <View style={styles.returnContainer}>
+            <FontAwesome5
+              onPress={() => setVideo(undefined)}
+              name="arrow-left"
+              size={25}
+              color="white"
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Pressable
+              style={styles.button}
+              onPress={() => router.push("gallery/photos")}
+            >
+              <Text>View Gallery</Text>
+            </Pressable>
+          </View>
         </>
       )}
 

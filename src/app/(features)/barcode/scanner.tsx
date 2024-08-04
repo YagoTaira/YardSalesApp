@@ -63,13 +63,13 @@ const BarcodeScreen: React.FC = () => {
               body: JSON.stringify(params),
             }
           );
-          if (response.ok) {
-            const data = await response.json();
-            const data_count =
-              data["findItemsAdvancedResponse"][0]["searchResult"][0]["@count"];
-            const data_item =
-              data["findItemsAdvancedResponse"][0]["searchResult"][0]["item"];
 
+          const data = await response.json();
+          const data_count =
+            data["findItemsAdvancedResponse"][0]["searchResult"][0]["@count"];
+          const data_item =
+            data["findItemsAdvancedResponse"][0]["searchResult"][0]["item"];
+          if (data_count > 0) {
             var card_data = [];
             for (let i = 0; i < data_count; i++) {
               card_data.push({
