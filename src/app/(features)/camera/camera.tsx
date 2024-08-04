@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Pressable,
   Image,
+  Alert,
 } from "react-native";
 import { Stack, useFocusEffect, router } from "expo-router";
 import {
@@ -21,6 +22,7 @@ import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Video } from "expo-av";
 import { auth, storage } from "../../../../FirebaseConfig";
 import { ref, uploadBytes } from "firebase/storage";
+import * as FileSystem from "expo-file-system";
 
 const CameraScreen: React.FC = () => {
   const device = useCameraDevice("back", {
@@ -82,9 +84,24 @@ const CameraScreen: React.FC = () => {
           return;
         }
 
-        // Convert photo to blob
-        const response = await fetch(photo.path);
-        const blob = await response.blob();
+        // Read the file as base64
+        const base64 = await FileSystem.readAsStringAsync(photo.path, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+
+        // Create blob from base64
+        const blob = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.onload = function () {
+            resolve(xhr.response);
+          };
+          xhr.onerror = function (e) {
+            reject(new TypeError("Network request failed"));
+          };
+          xhr.responseType = "blob";
+          xhr.open("GET", `data:image/jpeg;base64,${base64}`, true);
+          xhr.send(null);
+        });
 
         // Upload photo to Firebase Storage
         const photoName = `${Date.now()}.jpg`;
@@ -92,7 +109,7 @@ const CameraScreen: React.FC = () => {
           storage,
           `users/${user.uid}/photos/${photoName}`
         );
-        await uploadBytes(storageRef, blob);
+        await uploadBytes(storageRef, blob as Blob);
 
         setPhoto(photo);
       } else {
@@ -107,6 +124,8 @@ const CameraScreen: React.FC = () => {
       if (error && typeof error === "object" && "code" in error) {
         console.error("Error code:", (error as any).code);
       }
+      // Display error to user
+      Alert.alert("Error", "Failed to take or upload photo. Please try again.");
     }
   };
 
