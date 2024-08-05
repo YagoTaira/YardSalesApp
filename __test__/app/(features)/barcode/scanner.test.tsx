@@ -2,7 +2,8 @@ import React from "react";
 import { act } from "@testing-library/react-native";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import BarcodeScreen from "../../../../src/app/(features)/barcode/scanner";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { useCodeScanner } from "react-native-vision-camera";
 
 // Mock the necessary dependencies
 jest.mock("expo-router", () => ({
@@ -94,17 +95,27 @@ describe("BarcodeScreen", () => {
 
   it("navigates to items page on successful scan", async () => {
     const mockResponse = {
-      itemSummaries: [
+      findItemsAdvancedResponse: [
         {
-          itemId: "1",
-          title: "Test Item",
-          price: { value: "10.00" },
-          image: { imageUrl: "http://example.com/image.jpg" },
-          seller: { username: "TestSeller" },
-          itemWebUrl: "http://example.com/item",
+          searchResult: [
+            {
+              "@count": 1,
+              item: [
+                {
+                  itemId: ["1"],
+                  title: ["Test Item"],
+                  galleryURL: ["http://example.com/image.jpg"],
+                  sellingStatus: [{ currentPrice: [{ __value__: "10.00" }] }],
+                  storeInfo: [{ storeName: ["TestSeller"] }],
+                  viewItemURL: ["http://example.com/item"],
+                },
+              ],
+            },
+          ],
         },
       ],
     };
+
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       json: () => Promise.resolve(mockResponse),
       ok: true,
@@ -117,8 +128,7 @@ describe("BarcodeScreen", () => {
 
     // Simulate a barcode scan
     await act(async () => {
-      const useCodeScannerMock =
-        require("react-native-vision-camera").useCodeScanner;
+      const useCodeScannerMock = useCodeScanner as jest.Mock;
       const onCodeScanned = useCodeScannerMock.mock.calls[0][0].onCodeScanned;
       await onCodeScanned([{ value: "1234567890" }]);
     });
@@ -128,10 +138,19 @@ describe("BarcodeScreen", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
-    expect(require("expo-router").router.push).toHaveBeenCalledWith({
+    expect(router.push).toHaveBeenCalledWith({
       pathname: "/barcode/items",
       params: {
-        items: expect.any(String),
+        items: JSON.stringify([
+          {
+            id: "1",
+            title: "Test Item",
+            imageSource: "http://example.com/image.jpg",
+            price: "10.00",
+            seller: "TestSeller",
+            url: "http://example.com/item",
+          },
+        ]),
       },
     });
   });
