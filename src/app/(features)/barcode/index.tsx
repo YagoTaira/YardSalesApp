@@ -7,7 +7,22 @@ import { Ionicons } from "@expo/vector-icons";
 
 const description = `
 # Barcode Scanner
-Scan barcode from products using Reactive Native Vision Camera.`;
+
+The Barcode Scanner allows you to scan barcodes from various products quickly and efficiently using the React Native Vision Camera. This feature is designed to help you find detailed information about products in real-time, enhancing your shopping and inventory management experience.
+
+## Features
+
+- **Fast and Accurate Scanning**: Utilizes advanced camera capabilities to ensure quick and precise barcode reading.
+- **Real-time Product Information**: Instantly retrieve product details upon scanning a barcode, including price, availability, and more.
+- **User-Friendly Interface**: Easy-to-use interface with intuitive controls, making the scanning process seamless and straightforward.
+
+## How to Use
+
+1. **Launch the Barcode Scanner**: Tap on the "Go to Barcode Scanner" button below to start scanning.
+2. **Scan a Barcode**: Point your device's camera at a barcode. Ensure the barcode fits within the scanning frame for optimal results.
+3. **View Product Details**: Once scanned, the app will fetch and display the product information associated with the barcode.
+
+Enhance your shopping experience or streamline your inventory management with our powerful and efficient Barcode Scanner. Start scanning now!`;
 
 const FeatureDetailsScreen = () => {
   return (

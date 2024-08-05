@@ -33,9 +33,8 @@ describe("FeatureDetailsScreen", () => {
     const markdownDisplay = getByTestId("MarkdownDisplay");
     expect(markdownDisplay).toBeTruthy();
     expect(markdownDisplay.props.children).toContain("# Notebook");
-    expect(markdownDisplay.props.children).toContain(
-      "Integrate Markdown Notebook content in **React Native"
-    );
+    expect(markdownDisplay.props.children).toContain("## Features");
+    expect(markdownDisplay.props.children).toContain("## How to Use");
   });
 
   it("navigates back when back button is pressed", () => {

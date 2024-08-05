@@ -39,8 +39,7 @@ describe("FeatureDetailsScreen", () => {
     const markdownDisplay = getByTestId("MarkdownDisplay");
     expect(markdownDisplay).toBeTruthy();
     expect(markdownDisplay.props.children).toContain("# Camera");
-    expect(markdownDisplay.props.children).toContain(
-      "Take pictures and record products using Reactive Native Vision Camera for future visualization."
-    );
+    expect(markdownDisplay.props.children).toContain("## Features");
+    expect(markdownDisplay.props.children).toContain("## How to Use");
   });
 });

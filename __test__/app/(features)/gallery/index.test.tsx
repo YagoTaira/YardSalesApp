@@ -19,11 +19,8 @@ describe("FeatureDetailsScreen", () => {
     const { getByText } = render(<FeatureDetailsScreen />);
 
     expect(getByText("Photo Gallery")).toBeTruthy();
-    expect(
-      getByText(
-        "Scan barcode from products using Reactive Native Vision Camera."
-      )
-    ).toBeTruthy();
+    expect(getByText("Features")).toBeTruthy();
+    expect(getByText("How to Use")).toBeTruthy();
     expect(getByText("Go to Gallery")).toBeTruthy();
   });
 
