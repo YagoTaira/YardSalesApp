@@ -22,10 +22,11 @@ import {
 
 // Define the interface for items in the list
 interface ItemList {
+  id: string;
   title: string;
   imageSource: string;
   price: string;
-  store: string;
+  seller: string;
 }
 
 const BarcodeScreen: React.FC = () => {
@@ -36,7 +37,6 @@ const BarcodeScreen: React.FC = () => {
   const [isScanning, setIsScanning] = useState(true);
   const [itemList, setItemList] = useState<ItemList[]>([]);
   const [hasNavigated, setHasNavigated] = useState(false); // Flag to prevent multiple navigations
-  const num_items = 10; // Number of items to fetch
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error message
 
   const codeScanner = useCodeScanner({
@@ -45,48 +45,66 @@ const BarcodeScreen: React.FC = () => {
       if (isScanning && !hasNavigated) {
         setHasNavigated(true); // Prevent further navigations
         try {
+          const params = {
+            Keyword: codes[0].value,
+            Category: "All Categories",
+            new: false,
+            used: false,
+            unspecified: false,
+            freeShipping: false,
+            localPickup: false,
+          };
           const response = await fetch(
-            `https://api.ebay.com/buy/browse/v1/item_summary/search?q=${codes[0].value}&limit=${num_items}`,
+            `https://inductive-folio-404523.wl.r.appspot.com/getallitems`,
             {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${EBAY_OAUTH_TOKEN}`,
-                "X-EBAY-C-MARKETPLACE-ID": X_EBAY_C_MARKETPLACE_ID,
-                "X-EBAY-C-ENDUSERCTX": X_EBAY_C_ENDUSERCTX,
-              },
+              method: "POST",
+              mode: "cors",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(params),
             }
           );
+
           const data = await response.json();
-
-          console.log(data);
-
-          if (
-            data.itemSummaries &&
-            Array.isArray(data.itemSummaries) &&
-            data.itemSummaries.length > 0
-          ) {
-            const card_data = data.itemSummaries.map((item: any) => ({
-              id: item.itemId || "Dummy",
-              title: item.title || "Dummy",
-              imageSource: item.image ? item.image.imageUrl : "Dummy",
-              price: item.price ? item.price.value : "dummy",
-              seller: item.seller ? item.seller.username : "Dummy",
-              url: item.itemWebUrl || "Dummy",
-            }));
+          const data_count =
+            data["findItemsAdvancedResponse"][0]["searchResult"][0]["@count"];
+          const data_item =
+            data["findItemsAdvancedResponse"][0]["searchResult"][0]["item"];
+          if (data_count > 0) {
+            var card_data = [];
+            for (let i = 0; i < data_count; i++) {
+              card_data.push({
+                id: data_item[i]["itemId"]
+                  ? data_item[i]["itemId"][0]
+                  : "Dummy",
+                title: data_item[i]["title"]
+                  ? data_item[i]["title"][0]
+                  : "Dummy",
+                imageSource: data_item[i]["galleryURL"]
+                  ? data_item[i]["galleryURL"][0]
+                  : "Dummy",
+                price: data_item[i]["sellingStatus"]
+                  ? data_item[i]["sellingStatus"][0]["currentPrice"][0][
+                      "__value__"
+                    ]
+                  : "dummy",
+                seller: data_item[i]["storeInfo"]
+                  ? data_item[i]["storeInfo"][0]["storeName"][0]
+                  : "Dummy",
+                url: data_item[i]["viewItemURL"]
+                  ? data_item[i]["viewItemURL"][0]
+                  : "Dummy",
+              });
+            }
             setItemList(card_data);
 
             router.push({
               pathname: "/barcode/items",
               params: { items: JSON.stringify(card_data) },
             });
-
-            console.log("Successfully scanned!");
           } else {
             setErrorMessage("No search results found.");
-            console.log("No search results found.");
           }
         } catch (error) {
-          console.log("API request failed:", error);
           setErrorMessage("Failed to fetch data from API.");
         }
       }
